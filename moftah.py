@@ -10,7 +10,7 @@ class Main():
         self.checkFirstRun()
         
     def checkFirstRun(self):
-        with open('../config.json', 'r+') as config:
+        with open('config.json', 'r+') as config:
             f = json.load(config)
             if f['password'] == "firstrun":
                 print(f"""
@@ -28,7 +28,7 @@ We'll have to update the password now so please enter a new password!
         Args:
             password (string)
         """
-        with open('../config.json', 'r+') as config:
+        with open('config.json', 'r+') as config:
             f = json.load(config)
             f['password'] = password
             config.seek(0)
