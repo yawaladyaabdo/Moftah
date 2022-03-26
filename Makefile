@@ -1,5 +1,5 @@
 build:
-	pyinstaller moftah.py
+	python3 -m PyInstaller moftah.py
 	mv dist/* .
 	rm -rf build dist logs moftah.spec
 clean:
