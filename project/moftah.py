@@ -15,11 +15,11 @@ class Main():
     def checkFirstRun(self):
         try:
             # Create database connection
-            con = sqlite3.connect('db/passwords.db')
+            con = sqlite3.connect(f'/home/{user}/.config/moftah/db/passwords.db')
             cur = con.cursor()
  
 
-            with open("log/log.json", "r+") as config:
+            with open(f"/home/{user}/.config/moftah/log/log.json", "r+") as config:
                 f = json.load(config)
 
                 if f['ran'] == 0:
@@ -98,7 +98,6 @@ We'll have to update the password now so please enter a new password!
                                     que = input("Correct? [Y/N]: ")
                                     
                                     if que.casefold() == "y":
-                                        print("Yay")
                                         query = """
                                         INSERT INTO passwords(website,user,password) VALUES (?,?,?);
                                         """
@@ -140,9 +139,9 @@ We'll have to update the password now so please enter a new password!
                                     config.close()
                                 exit()
                         else:
-                            print('no')
+                            print('[1] Wrong password!')
                     except Exception as e:
-                        print(f"[1] {e}")
+                        print(f"[1] Wrong password!")
         except Exception as e:
             print(f"[1] {e}")
 
