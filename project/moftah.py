@@ -15,6 +15,7 @@ class Main():
     def checkFirstRun(self):
         try:
             # Create database connection
+            user = getpass.getuser()
             con = sqlite3.connect(f'/home/{user}/.config/moftah/db/passwords.db')
             cur = con.cursor()
  
@@ -60,7 +61,7 @@ We'll have to update the password now so please enter a new password!
                     print("Please rerun this!")
                 else:
                     try:
-                        con = sqlite3.connect('db/passwords.db')
+                        con = sqlite3.connect(f'/home/{user}/.config/moftah/db/passwords.db')
                         cur = con.cursor()
                         insertQuery = """SELECT password FROM userpass"""
                         cur.execute(insertQuery)
@@ -72,7 +73,8 @@ We'll have to update the password now so please enter a new password!
                             print("Please type the number next to the text")
                             print("(1) new info: ")
                             print("(2) View all passwords")
-                            print("(3) RESET FULLY (DANGEROUS): ")
+                            print("(3) Remove a password")
+                            print("(4) RESET FULLY (DANGEROUS): ")
                             pick = input("Pick a number: ")
                             if pick == "1":
                                 while 420 > 69:
@@ -116,20 +118,34 @@ We'll have to update the password now so please enter a new password!
                                             con.close()
                                             exit()
                             elif pick == "2":
-                                cur.execute("SELECT * FROM passwords")
-                                entries = cur.fetchall()
-                                for row in entries:
-                                    print("==================")
-                                    print("Website:", row[0])
-                                    print("Username: ", row[1])
-                                    print("Passsword: ", row[2])
+                                try:
+                                    cur.execute("SELECT * FROM passwords")
+                                    entries = cur.fetchall()
+                                    if len(entries)==0:
+                                        print("You have no saved paswords!")
+                                    else:
+                                        for row in entries:
+                                            print("==================")
+                                            print("Website:", row[0])
+                                            print("Username: ", row[1])
+                                            print("Passsword: ", row[2])
+                                except Exception as e:
+                                    print(f"[1] {e}")
                             elif pick == "3":
-                                os.system('rm db/passwords.db')
+                                print("Please enter the credentials correctly!")
+                                webs = input("Website: ")
+                                usern = input("User: ")
+                                query = """DELETE FROM passwords WHERE website = ? AND user = ?"""
+                                cur.execute(query, (webs,usern,))
+                                con.commit()
+                                print("Updated passwords")
+                            elif pick == "4":
+                                os.system(f'rm /home/{user}/.config/moftah/db/passwords.db')
                                 time.sleep(2)
-                                con = sqlite3.connect('db/passwords.db')
+                                con = sqlite3.connect(f'/home/{user}/.config/moftah/db/passwords.db')
                                 con.close()
                                 print("Removed all passwords!")
-                                with open("log/log.json", "r+") as config:
+                                with open(f"/home/{user}/.config/moftah/log/log.json", "r+") as config:
                                     f = json.load(config)
                                     
                                     f['ran'] = 0
@@ -141,7 +157,7 @@ We'll have to update the password now so please enter a new password!
                         else:
                             print('[1] Wrong password!')
                     except Exception as e:
-                        print(f"[1] Wrong password!")
+                        print(f"[1] {e}")
         except Exception as e:
             print(f"[1] {e}")
 

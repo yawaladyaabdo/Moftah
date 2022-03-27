@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+$CNFDIR="$HOME/.config/moftah"
+
+python3 -m PyInstaller -F project/moftah.py
+mkdir -p $HOME/.config/moftah
+mkdir -p $HOME/.config/moftah/db
+mkdir -p $HOME/.config/moftah/log
+touch $HOME/.config/moftah/log/log.json
+echo '{"ran": 0}' > $HOME/.config/moftah/log/log.json
+
+mv dist/* ~/.local/bin
