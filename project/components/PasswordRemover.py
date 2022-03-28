@@ -37,15 +37,19 @@ class PasswordRemover:
             cur.execute('''
                         SELECT * FROM passwords''')
             data = cur.fetchall()
+            con.close()
             if len(data) == 0:
                 print(colors.FAIL + "[1] You have no passwords!" + colors.ENDC)
                 con.close()
                 exit()
             else:
+                # Creating the website connection and creating the cursor
+                con = sqlite3.connect(f'{CNFPATH}/db/passwords.db')
+                cur = con.cursor()
                 WEB = input('Enter the website name: ')
                 USER = input('Enter the username associated with that website: ')
                 cur.execute(
-                    '''SELECT FROM passwords WHERE website = ? AND user = ?''',
+                    '''SELECT * FROM passwords WHERE website = ? AND user = ?''',
                     (WEB,USER,))  # noqa: E231
                 details = cur.fetchone()
                 if details is None:
@@ -54,9 +58,9 @@ class PasswordRemover:
                     con.close()
                 else:
                     cur.execute(
-                        '''DELETE FROM passwords WHERE website = ? AND user = ?''',
-                        (WEB,USER,))  # noqa: E231
+                        '''DELETE FROM passwords WHERE website = ? AND user = ?''',(WEB,USER,))  # noqa: E231
                     print(colors.OKGREEN + "[0] Deleted password from database!" + colors.ENDC)
                     i = 11
                     con.commit()
                     con.close()
+                    exit()

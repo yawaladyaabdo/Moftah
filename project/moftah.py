@@ -27,47 +27,52 @@ class Main():
         cur = con.cursor()
 
         cur.execute("""
-                SELECT * FROM userpass
+                SELECT password FROM userpass
                 """)
         PASSWORD = cur.fetchone()
-
+        PASSWORD = ''.join(PASSWORD)
         CHECK = input("Please enter your password: ")
-        if CHECK == PASSWORD:
-            print(f"""
-                Welcome back, {USERNAME}.
-                Please pick an option.
-                1. Add a password
-                2. Remove a password
-                3. View all my passwords
-                4. REMOVE EVERYTHING
-                """)
-            con.close()
-            OPTION = input("Which option will you pick: ")
-            i = 0
-            n = 10
-            while i < n:
-                if OPTION == "1":
-                    from components.PasswordAdder import PasswordAdder
-                    PasswordAdder()
-                    i = 11
-                elif OPTION == "2":
-                    from components.PasswordRemover import PasswordRemover
-                    PasswordRemover()
-                    i = 11
-                elif OPTION == "3":
-                    from components.PasswordViewer import PasswordViewer
-                    PasswordViewer()
-                    i = 11
-                elif OPTION == "4":
-                    from components.PasswordNuker import PasswordNuker
-                    PasswordNuker()
-                    i = 11
-                else:
+        try:
+            if CHECK == PASSWORD:
+                try:
+                    print(f"""
+Welcome back, {USERNAME}.
+Please pick an option.
+1. Add a password
+2. Remove a password
+3. View all my passwords
+4. REMOVE EVERYTHING
+                    """)
+                    con.close()
+                    OPTION = input("Which option will you pick: ")
                     i = 0
-
-        else:
-            print(colors.FAIL + "[1] Wrong password" + colors.ENDC)
-            exit()
+                    n = 10
+                    while i < n:
+                        if OPTION == "1":
+                            from components.PasswordAdder import PasswordAdder
+                            PasswordAdder()
+                            i = 11
+                        elif OPTION == "2":
+                            from components.PasswordRemover import PasswordRemover
+                            PasswordRemover()
+                            i = 11
+                        elif OPTION == "3":
+                            from components.PasswordViewer import PasswordViewer
+                            PasswordViewer()
+                            i = 11
+                        elif OPTION == "4":
+                            from components.PasswordNuker import PasswordNuker
+                            PasswordNuker()
+                            i = 11
+                        else:
+                            i = 0
+                except Exception as e:
+                    print(colors.FAIL + f"[1] {e}" + colors.ENDC)
+            else:
+                print(colors.FAIL + "[1] Wrong password" + colors.ENDC)
+                exit()
+        except Exception as e:
+            print(colors.FAIL + f"[1] {e}" + colors.ENDC)
 
     def setup(self):
         """

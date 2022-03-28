@@ -29,32 +29,29 @@ class PasswordAdder:
             # Variables needed to connect to the database
             USERNAME = getuser()
             CNFPATH = f'/home/{USERNAME}/.config/moftah'
-
-            # Creating the website connection and creating the cursor
-            con = sqlite3.connect(f'{CNFPATH}/db/passwords.db')
-            cur = con.cursor()
-
             # Ask the user for the important website details
             WEB = input("Enter the name of this website: ")
             USER = input("Enter your username on the website: ")
             PASSWORD = input("Enter your password: ")
 
             print(f'''
-                Is this information correct?
-                Website: {WEB}
-                Username: {USER}
-                Password: {PASSWORD}''')
-            QUESTION = input("[" + colors.OKGREEN + "Y" + colors.ENDC + "/" + colors.FAIL + "N" + colors.ENDC + "]")
-            if QUESTION.casefold() == "Y":
-                # Execute the SQL query
+Is this information correct?
+Website: {WEB}
+Username: {USER}
+Password: {PASSWORD}''')
+            QUESTION = input("[" + colors.OKGREEN + "Y" + colors.ENDC + "/" + colors.FAIL + "N" + colors.ENDC + "] ")
+            if QUESTION in ("Y", "y", "Yes", "yes"):
+                # Creating the website connection and creating the cursor
+                con = sqlite3.connect(f'{CNFPATH}/db/passwords.db')
+                cur = con.cursor()
                 cur.execute('''
                     INSERT INTO passwords(website,user,password) VALUES (?, ?, ?)
-                ''', (WEB, USER, PASSWORD,))  # noqa: E231
+                ''', (WEB,USER,PASSWORD,))  # noqa: E231
                 # Commit changes
                 con.commit()
-                i = 11
                 con.close()
-            elif QUESTION.casefold() == "N":
+                exit()
+            elif QUESTION in ("N", "n", "No", "n"):
                 i = 0
             else:
                 i = 0

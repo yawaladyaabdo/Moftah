@@ -17,6 +17,7 @@ class PasswordNuker:
         """
         Removes ALL the user's passwords
         """
+        self.nuke()
 
     def nuke(self):
         """
@@ -32,10 +33,10 @@ class PasswordNuker:
             # Creating the website connection and creating the cursor
             con = sqlite3.connect(f'{CNFPATH}/db/passwords.db')
             cur = con.cursor()
-
             cur.execute('''
                         DELETE FROM passwords
                     ''')
             con.commit()
             print(colors.OKGREEN + f"[0] Deleted {cur.rowcount} passwords" + colors.ENDC)
             con.close()
+            exit()

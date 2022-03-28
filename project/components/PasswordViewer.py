@@ -38,8 +38,10 @@ class PasswordViewer:
                     ''')
             data = cur.fetchall()
             if len(data) == 0:
-                print(colors.RED + "[1] You have no passwords" + colors.ENDC)
+                print(colors.FAIL + "[1] You have no passwords" + colors.ENDC)
+                exit()
             else:
+                print(f"[0] You have {len(data)} passwords")
                 for row in data:
                     print("==================")
                     print("Website:", row[0])
@@ -47,3 +49,4 @@ class PasswordViewer:
                     print("Passsword: ", row[2])
                 con.close()
                 i = 11
+                exit()
