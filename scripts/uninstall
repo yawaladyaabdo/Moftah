@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+
+
+read -r -p "Do you want to remove your passwords? [y/N] " response
+case "$response" in
+    [yY][eE][sS]|[yY]) 
+        rm -rf $HOME/.config/moftah
+        rm $HOME/.local/bin/moftah
+        ;;
+    *)
+        rm $HOME/.local/bin/moftah
+        ;;
+esac

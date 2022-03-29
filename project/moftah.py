@@ -1,174 +1,125 @@
+from getpass import getuser
 import sqlite3
-import getpass
 import json
-import time
-import os
 
-user = getpass.getuser()
+
+class colors:
+    # Important colors
+    OKGREEN = '\033[92m'  # noqa: F841
+    WARNING = '\033[93m'  # noqa: F841
+    FAIL = '\033[91m'  # noqa: F841
+    ENDC = '\033[0m'  # noqa: F841
+    BOLD = '\033[1m'  # noqa: F841
+    FAIL = '\033[91m'  # noqa: F841
 
 
 class Main():
     def __init__(self):
         self.checkFirstRun()
 
+    def InputManager(self):
+        """
+        Gives user choices
+        """
+        USERNAME = getuser()
+        CNFPATH = f'/home/{USERNAME}/.config/moftah'
+        con = sqlite3.connect(f'{CNFPATH}/db/passwords.db')
+        cur = con.cursor()
+
+        cur.execute("""
+                SELECT password FROM userpass
+                """)
+        PASSWORD = cur.fetchone()
+        PASSWORD = ''.join(PASSWORD)
+        CHECK = input("Please enter your password: ")
+        try:
+            if CHECK == PASSWORD:
+                try:
+                    print(f"""
+Welcome back, {USERNAME}.
+Please pick an option.
+1. Add a password
+2. Remove a password
+3. View all my passwords
+4. REMOVE EVERYTHING
+                    """)
+                    con.close()
+                    OPTION = input("Which option will you pick: ")
+                    i = 0
+                    n = 10
+                    while i < n:
+                        if OPTION == "1":
+                            from components.PasswordAdder import PasswordAdder
+                            PasswordAdder()
+                            i = 11
+                        elif OPTION == "2":
+                            from components.PasswordRemover import PasswordRemover
+                            PasswordRemover()
+                            i = 11
+                        elif OPTION == "3":
+                            from components.PasswordViewer import PasswordViewer
+                            PasswordViewer()
+                            i = 11
+                        elif OPTION == "4":
+                            from components.PasswordNuker import PasswordNuker
+                            PasswordNuker()
+                            i = 11
+                        else:
+                            i = 0
+                except Exception as e:
+                    print(colors.FAIL + f"[1] {e}" + colors.ENDC)
+            else:
+                print(colors.FAIL + "[1] Wrong password" + colors.ENDC)
+                exit()
+        except Exception as e:
+            print(colors.FAIL + f"[1] {e}" + colors.ENDC)
+
+    def setup(self):
+        """
+        Sets up the user details
+        """
+        USERNAME = getuser()
+        CNFPATH = f'/home/{USERNAME}/.config/moftah'
+        con = sqlite3.connect(f'{CNFPATH}/db/passwords.db')
+        cur = con.cursor()
+        print(
+            f"""
+            Hi there, {USERNAME}.
+            Since it is your first time running Moftah we will
+            go through the setup process. You need a password
+            to protect your stuff so how about we start with that
+            """)
+        PASSWORD = input("Please enter a password: ")
+        cur.execute("""
+CREATE TABLE "passwords" (
+    "website"	TEXT,
+    "user"	TEXT,
+    "password"	TEXT
+);""")
+        cur.execute("""
+CREATE TABLE "userpass" (
+    "password"	TEXT
+);""")
+        con.commit()
+        cur.execute(
+            """INSERT INTO userpass VALUES (?)""", (PASSWORD,))
+        con.commit()
+        con.close()
 
     def checkFirstRun(self):
         try:
-            # Create database connection
-            user = getpass.getuser()
-            con = sqlite3.connect(f'/home/{user}/.config/moftah/db/passwords.db')
-            cur = con.cursor()
- 
-
-            with open(f"/home/{user}/.config/moftah/log/log.json", "r+") as config:
+            # Variables needed to connect to the database
+            USERNAME = getuser()
+            CNFPATH = f'/home/{USERNAME}/.config/moftah'
+            with open(f'{CNFPATH}/log/log.json', 'r+') as config:
                 f = json.load(config)
+                if f['ran'] == "0":
+                    self.setup()
 
-                if f['ran'] == 0:
-                    cur.execute("""
-CREATE TABLE "passwords" (
-	"website"	TEXT,
-	"user"	TEXT,
-	"password"	TEXT
-);
-
-                    """)
-                    con.commit()
-                    cur.execute("""
-CREATE TABLE "userpass" (
-	"password"	TEXT
-);
-            """)
-                    con.commit()
-                    print(f"""
-It seems that you are running Moftah for the first time, {user}.\n
-We'll have to update the password now so please enter a new password!
-                      """)
-
-                    # Ask for a master password
-                    newpass = getpass.getpass(prompt="New password: ")
-
-                    # Insert password
-                    insertQuery = """INSERT INTO userpass VALUES (?)"""
-                    cur.execute(insertQuery, (newpass,))
-                    con.commit()
-
-                    # Rewrite the number in json
-                    f['ran'] = 1
-                    config.seek(0)
-                    json.dump(f, config)
-                    config.truncate()
-                    config.close()
-                    print("Please rerun this!")
                 else:
-                    try:
-                        con = sqlite3.connect(f'/home/{user}/.config/moftah/db/passwords.db')
-                        cur = con.cursor()
-                        insertQuery = """SELECT password FROM userpass"""
-                        cur.execute(insertQuery)
-                        x = cur.fetchone()
-                        x = ''.join(x)
-                        y = input(
-                            f"Welcome back {user}, please enter your master password: ")
-                        if x == y:
-                            print("Please type the number next to the text")
-                            print("(1) new info: ")
-                            print("(2) View all passwords")
-                            print("(3) Remove a password")
-                            print("(4) RESET FULLY (DANGEROUS): ")
-                            pick = input("Pick a number: ")
-                            if pick == "1":
-                                while 420 > 69:
-                                    webs = input("Website name: ")
-                                    if webs == None:
-                                        print("You didn't enter a website name!")
-                                        return
-                                    else:
-                                        pass
-                                    usern = input("Username: ")
-                                    if usern == None:
-                                        print("You didn't enter a username")
-                                        return
-                                    else:
-                                        pass
-                                    passw = input("Password: ")
-                                    if passw == None:
-                                        print("You didn't enter a password!")
-                                        return
-                                    else:
-                                        pass
-                                    print(f"Username: {usern}, Password: {passw}, Website: {webs}")
-                                    que = input("Correct? [Y/N]: ")
-                                    
-                                    if que.casefold() == "y":
-                                        query = """
-                                        INSERT INTO passwords(website,user,password) VALUES (?,?,?);
-                                        """
-                                        
-                                        cur.execute((query), (webs,usern,passw,))
-                                        con.commit()
-                                        print("Updated your passwords!")
-                                        con.close()
-                                        exit()
-                                    else:
-                                        que = input("Repeat? [Y/N] ")
-                                        if que.casefold():
-                                            return
-                                        else:
-                                            print("Goodbye!")
-                                            con.close()
-                                            exit()
-                            elif pick == "2":
-                                try:
-                                    cur.execute("SELECT * FROM passwords")
-                                    entries = cur.fetchall()
-                                    if len(entries)==0:
-                                        print("You have no saved paswords!")
-                                    else:
-                                        for row in entries:
-                                            print("==================")
-                                            print("Website:", row[0])
-                                            print("Username: ", row[1])
-                                            print("Passsword: ", row[2])
-                                except Exception as e:
-                                    print(f"[1] {e}")
-                            elif pick == "3":
-                                print("Please enter the credentials correctly!")
-                                webs = input("Website: ")
-                                usern = input("User: ")
-                                query = """DELETE FROM passwords WHERE website = ? AND user = ?"""
-                                cur.execute(query, (webs,usern,))
-                                con.commit()
-                                print("Updated passwords")
-                            elif pick == "4":
-                                os.system(f'rm /home/{user}/.config/moftah/db/passwords.db')
-                                time.sleep(2)
-                                con = sqlite3.connect(f'/home/{user}/.config/moftah/db/passwords.db')
-                                con.close()
-                                print("Removed all passwords!")
-                                with open(f"/home/{user}/.config/moftah/log/log.json", "r+") as config:
-                                    f = json.load(config)
-                                    
-                                    f['ran'] = 0
-                                    config.seek(0)
-                                    json.dump(f, config)
-                                    config.truncate()
-                                    config.close()
-                                exit()
-                        else:
-                            print('[1] Wrong password!')
-                    except Exception as e:
-                        print(f"[1] {e}")
+                    self.InputManager()
         except Exception as e:
             print(f"[1] {e}")
-
-    def requirePassword(self):
-        try:
-            x = getpass.getpass(
-                f"Welcome to Moftah, {user}. Please enter your password: ")
-        except Exception as e:
-            print("Wrong password")
-    
-    
 
 
 if __name__ == "__main__":
