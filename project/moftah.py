@@ -42,6 +42,7 @@ Please pick an option.
 2. Remove a password
 3. View all my passwords
 4. REMOVE EVERYTHING
+5. Exit
                     """)
                     con.close()
                     OPTION = input("Which option will you pick: ")
@@ -64,6 +65,10 @@ Please pick an option.
                             from components.PasswordNuker import PasswordNuker
                             PasswordNuker()
                             i = 11
+                        elif OPTION == "5":
+                            print("Goodbye!")
+                            i = 11
+                            exit()
                         else:
                             i = 0
                 except Exception as e:
@@ -73,6 +78,17 @@ Please pick an option.
                 exit()
         except Exception as e:
             print(colors.FAIL + f"[1] {e}" + colors.ENDC)
+
+    def updateRan(self):
+        USERNAME = getuser()
+        CNFPATH = f'/home/{USERNAME}/.config/moftah'
+        with open(f"{CNFPATH}/log/log.json", "r") as jsonFile:
+            data = json.load(jsonFile)
+
+        data["ran"] = 1
+
+        with open(f"{CNFPATH}/log/log.json", "w") as jsonFile:
+            json.dump(data, jsonFile)
 
     def setup(self):
         """
@@ -84,10 +100,10 @@ Please pick an option.
         cur = con.cursor()
         print(
             f"""
-            Hi there, {USERNAME}.
-            Since it is your first time running Moftah we will
-            go through the setup process. You need a password
-            to protect your stuff so how about we start with that
+Hi there, {USERNAME}.
+Since it is your first time running Moftah we will
+go through the setup process. You need a password
+to protect your stuff so how about we start with that
             """)
         PASSWORD = input("Please enter a password: ")
         cur.execute("""
@@ -105,6 +121,7 @@ CREATE TABLE "userpass" (
             """INSERT INTO userpass VALUES (?)""", (PASSWORD,))
         con.commit()
         con.close()
+        self.updateRan()
 
     def checkFirstRun(self):
         try:
@@ -113,9 +130,9 @@ CREATE TABLE "userpass" (
             CNFPATH = f'/home/{USERNAME}/.config/moftah'
             with open(f'{CNFPATH}/log/log.json', 'r+') as config:
                 f = json.load(config)
-                if f['ran'] == "0":
+                if f['ran'] == 0:
                     self.setup()
-
+                    self.InputManager()
                 else:
                     self.InputManager()
         except Exception as e:

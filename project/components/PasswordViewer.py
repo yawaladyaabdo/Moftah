@@ -40,8 +40,12 @@ class PasswordViewer:
             if len(data) == 0:
                 print(colors.FAIL + "[1] You have no passwords" + colors.ENDC)
                 exit()
+
             else:
-                print(f"[0] You have {len(data)} passwords")
+                if len(data) == 1:
+                    print(f"[0] You have {len(data)} password")
+                elif len(data) > 1:
+                    print(f"[0] You have {len(data)} passwords")
                 for row in data:
                     print("==================")
                     print("Website:", row[0])

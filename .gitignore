@@ -1,134 +1,51 @@
-################################
-###########  FILES  ############
-################################
-TODO*.*
-*.pptx
-*.pdf
+# File created using '.gitignore Generator' for Visual Studio Code: https://bit.ly/vscode-gig
 
-################################
-########### FOLDERS ############
-################################
-build/
-html/
-.benchmarks/
-reports/
-lectures/
+# Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,linux
+# Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,linux
 
-################################
-########### PYTHON #############
-################################
+### Linux ###
+*~
 
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
+# temporary files which can be created if a process still has a handle open of a deleted file
+.fuse_hidden*
 
-# C extensions
-*.so
+# KDE directory preferences
+.directory
 
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
+# Linux trash folder which might appear on any partition or disk
+.Trash-*
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
+# .nfs files are created when an open file is removed but is still being accessed
+.nfs*
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
 
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-.hypothesis/
-.pytest_cache/
+# Local History for Visual Studio Code
+.history/
 
-# Translations
-*.mo
-*.pot
+# Built Visual Studio Code Extensions
+*.vsix
 
-# Django stuff:
-*.log
-local_settings.py
-db.sqlite3
-
-# Flask stuff:
-instance/
-.webassets-cache
-
-# Scrapy stuff:
-.scrapy
-
-# Sphinx documentation
-docs/build/
-
-# PyBuilder
-target/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# pyenv
-.python-version
-
-# celery beat schedule file
-celerybeat-schedule
-
-# SageMath parsed files
-*.sage.py
-
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
-# mkdocs documentation
-/site
-
-# mypy
-.mypy_cache/
-.mypy_cache*
-
-*.isorted
-
-################################
-########### VS CODE ############
-################################
-.vscode
-*.code-workspace
+### VisualStudioCode Patch ###
+# Ignore all local history of files
 .history
+.ionide
+
+# Support for Project snippet scope
+
+# End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,linux
+
+# Custom rules (everything added below won't be overriden by 'Generate .gitignore File' if you use 'Update' option)
+
+.vscode
+dist
+build
+logs
+__pycache__
+*.spec
